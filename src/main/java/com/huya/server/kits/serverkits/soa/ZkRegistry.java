@@ -1,4 +1,4 @@
-package com.huya.server.kits.serverkits.registry;
+package com.huya.server.kits.serverkits.soa;
 
 import com.huya.server.kits.serverkits.exception.RemoteException;
 import com.huya.server.kits.serverkits.model.RegistryModel;
