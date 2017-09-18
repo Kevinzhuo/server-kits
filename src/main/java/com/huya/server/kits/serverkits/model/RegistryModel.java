@@ -1,6 +1,10 @@
 package com.huya.server.kits.serverkits.model;
 
+import com.huya.server.kits.serverkits.utils.DomainUtils;
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.Serializable;
+import java.net.UnknownHostException;
 import java.util.List;
 
 /**
@@ -22,10 +26,20 @@ public class RegistryModel implements Serializable {
 
     private String role;
 
+    private String environment;
+
+    private String area;
+
     private List<String> api;
 
-    public String getIp() {
-        return ip;
+    public String getIp() throws UnknownHostException {
+        String realIp;
+        if (StringUtils.isNoneBlank(ip)) {
+            realIp = ip;
+        } else {
+            realIp = DomainUtils.getServerIp();
+        }
+        return realIp;
     }
 
     public void setIp(String ip) {
@@ -70,6 +84,22 @@ public class RegistryModel implements Serializable {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public String getEnvironment() {
+        return environment;
+    }
+
+    public void setEnvironment(String environment) {
+        this.environment = environment;
+    }
+
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
     }
 
     public List<String> getApi() {
