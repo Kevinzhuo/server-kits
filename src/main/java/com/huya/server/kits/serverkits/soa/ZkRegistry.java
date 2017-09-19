@@ -54,42 +54,54 @@ public class ZkRegistry {
 
     private String createZookeeperNode(ZooKeeper zookeeper, RegistryModel registryModel) throws UnknownHostException, KeeperException, InterruptedException {
         String path;
-        Stat stat1 = zookeeper.exists(stitchingPath(registryModel.getAppName()), true);
+
+        Stat stat1 = zookeeper.exists(stitchingPath(RegistryModel.SOA), true);
         if (stat1 == null)
-            zookeeper.create(stitchingPath(registryModel.getAppName()), registryModel.getAppName().getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
+            zookeeper.create(stitchingPath(RegistryModel.SOA), RegistryModel.SOA.getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
 
-        Stat stat2 = zookeeper.exists(stitchingPath(registryModel.getAppName(), registryModel.getClusterName()), true);
+        Stat stat2 = zookeeper.exists(stitchingPath(RegistryModel.SOA, registryModel.getAppName()), true);
         if (stat2 == null)
-            zookeeper.create(stitchingPath(registryModel.getAppName(), registryModel.getClusterName()), registryModel.getClusterName().getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
+            zookeeper.create(stitchingPath(RegistryModel.SOA, registryModel.getAppName()), registryModel.getAppName().getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
 
-        Stat stat3 = zookeeper.exists(stitchingPath(registryModel.getAppName(), registryModel.getClusterName()
-                , registryModel.getRole()), true);
+        Stat stat3 = zookeeper.exists(stitchingPath(RegistryModel.SOA, registryModel.getAppName(), registryModel.getClusterName()), true);
         if (stat3 == null)
-            zookeeper.create(stitchingPath(registryModel.getAppName(), registryModel.getClusterName()
+            zookeeper.create(stitchingPath(RegistryModel.SOA, registryModel.getAppName(), registryModel.getClusterName()), registryModel.getClusterName().getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
+
+        Stat stat4 = zookeeper.exists(stitchingPath(RegistryModel.SOA, registryModel.getAppName(), registryModel.getClusterName()
+                , registryModel.getRole()), true);
+        if (stat4 == null)
+            zookeeper.create(stitchingPath(RegistryModel.SOA, registryModel.getAppName(), registryModel.getClusterName()
                     , registryModel.getRole()), registryModel.getRole().getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
 
-        Stat stat4 = zookeeper.exists(stitchingPath(registryModel.getAppName(), registryModel.getClusterName()
+        Stat stat5 = zookeeper.exists(stitchingPath(RegistryModel.SOA, registryModel.getAppName(), registryModel.getClusterName()
                 , registryModel.getRole(), registryModel.getServiceName()), true);
-        if (stat4 == null)
-            zookeeper.create(stitchingPath(registryModel.getAppName(), registryModel.getClusterName()
+        if (stat5 == null)
+            zookeeper.create(stitchingPath(RegistryModel.SOA, registryModel.getAppName(), registryModel.getClusterName()
                     , registryModel.getRole(), registryModel.getServiceName()),
                     registryModel.getServiceName().getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
 
-        Stat stat = zookeeper.exists(stitchingPath(registryModel.getAppName(), registryModel.getClusterName()
+        Stat stat = zookeeper.exists(stitchingPath(RegistryModel.SOA, registryModel.getAppName(), registryModel.getClusterName()
                 , registryModel.getRole(), registryModel.getServiceName()), true);
-        zookeeper.setData(stitchingPath(registryModel.getAppName(), registryModel.getClusterName()
+        zookeeper.setData(stitchingPath(RegistryModel.SOA, registryModel.getAppName(), registryModel.getClusterName()
                 , registryModel.getRole(), registryModel.getServiceName()),
                 registryModel.getApi() == null ? "".getBytes() : ArrayUtils.toString(registryModel.getApi()).getBytes(), stat.getVersion());
 
-        Stat stat5 = zookeeper.exists(stitchingPath(registryModel.getAppName(), registryModel.getClusterName()
-                , registryModel.getRole(), registryModel.getServiceName()
+        Stat stat6 = zookeeper.exists(stitchingPath(RegistryModel.SOA, registryModel.getAppName(), registryModel.getClusterName()
+                , registryModel.getRole(), registryModel.getServiceName(), registryModel.getLoadBalancing()), true);
+        if (stat6 == null)
+            zookeeper.create(stitchingPath(RegistryModel.SOA, registryModel.getAppName(), registryModel.getClusterName()
+                    , registryModel.getRole(), registryModel.getServiceName(), registryModel.getLoadBalancing()),
+                    registryModel.getLoadBalancing().getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
+
+        Stat stat7 = zookeeper.exists(stitchingPath(RegistryModel.SOA, registryModel.getAppName(), registryModel.getClusterName()
+                , registryModel.getRole(), registryModel.getServiceName(), registryModel.getLoadBalancing()
                 , registryModel.getIp()) + ":" + registryModel.getPort(), true);
-        if (stat5 == null) {
-            path = zookeeper.create(stitchingPath(registryModel.getAppName(), registryModel.getClusterName()
-                    , registryModel.getRole(), registryModel.getServiceName(), registryModel.getIp()) + ":" + registryModel.getPort(),
+        if (stat7 == null) {
+            path = zookeeper.create(stitchingPath(RegistryModel.SOA, registryModel.getAppName(), registryModel.getClusterName()
+                    , registryModel.getRole(), registryModel.getServiceName(), registryModel.getLoadBalancing(), registryModel.getIp()) + ":" + registryModel.getPort(),
                     (registryModel.getIp() + ":" + registryModel.getPort()).getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL);
         } else {
-            path = stitchingPath(registryModel.getAppName(), registryModel.getClusterName(), registryModel.getRole(), registryModel.getServiceName(),
+            path = stitchingPath(RegistryModel.SOA, registryModel.getAppName(), registryModel.getClusterName(), registryModel.getRole(), registryModel.getServiceName(), registryModel.getLoadBalancing(),
                     registryModel.getIp()) + ":" + registryModel.getPort();
         }
         return path;

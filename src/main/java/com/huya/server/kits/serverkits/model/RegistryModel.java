@@ -14,6 +14,8 @@ public class RegistryModel implements Serializable {
 
     private static final long serialVersionUID = 3642337500776174518L;
 
+    public static final String SOA = "soa";
+
     private String ip;
 
     private String port;
@@ -23,6 +25,8 @@ public class RegistryModel implements Serializable {
     private String ClusterName;
 
     private String ServiceName;
+
+    private String loadBalancing;
 
     private String role;
 
@@ -76,6 +80,14 @@ public class RegistryModel implements Serializable {
 
     public void setServiceName(String serviceName) {
         ServiceName = serviceName;
+    }
+
+    public String getLoadBalancing() {
+        return loadBalancing;
+    }
+
+    public void setLoadBalancing(String loadBalancing) {
+        this.loadBalancing = loadBalancing;
     }
 
     public String getRole() {
